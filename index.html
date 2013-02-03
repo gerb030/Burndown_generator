@@ -1,0 +1,48 @@
+<html>
+	<head>
+		<title>[ b u r n d o w n   g e n e r a t o r ]</title>
+		<script language="javascript" src="jquery.min.js"></script>
+		<script language="javascript" src="burndown.js"></script>
+    	<link rel="stylesheet" type="text/css" href="screen.css" />
+
+	    <script type="text/javascript">
+	    $(document).ready(function(){
+	    	  BurnDown.init();
+    	 });
+	    </script>
+  </head>
+
+</head>
+<body>
+	<h1>burndown generator</h1>
+	<div id='console'>
+		<form>
+			<p>
+				Enter the start date : <input name='startdate' id='startdate' type='text' onchange='BurnDown.handleDateChange("start");'>
+			</p>
+			<p>
+				Enter the start date : <input name='enddate' id='enddate' type='text' onchange='BurnDown.handleDateChange("end");'>
+			</p>
+			<p>
+				or select the sprint duration : <select name='duration' id='duration' onchange='BurnDown.handleDateChange("duration");'>
+												<option value='1'>1 week</option>
+												<option value='2'>2 weeks</option>
+												<option value='3'>3 weeks</option>
+												<option value='4'>4 weeks</option>
+												<option value='6'>6 weeks</option>
+												<option value='8'>8 weeks</option>
+												<option value='10'>10 weeks</option>
+												<option value='12'>12 weeks</option>
+											</select>
+			</p>
+			<p>
+				Enter the total story points : <input name='storypoints' id='storypoints' type='text' value='10' onchange='BurnDown.handleDateChange("storypoints");'>
+			</p>
+			<p>
+				<input name='generate' value='generate' type='button' onclick='BurnDown.generate();'>
+			</p>
+		</form>
+	</div>
+	<div id='burndowngraph'></div>
+	</body>
+</html>		

@@ -1,0 +1,16 @@
+body {
+	font: 10pt arial;
+}
+.graph {
+	margin-left: 36px;
+	border: 1px solid black;
+}
+.legendY, .legendX {
+	font: 8pt arial;
+	letter-spacing: -1px;
+	color: #606060;
+	max-width:80px;
+}
+.canvasStyle {
+	border: 1px solid black;
+}
