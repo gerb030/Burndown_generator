@@ -118,10 +118,12 @@ var BurnDownGraph = {
 		}
 		// Y axis, days number of points
 		var verticalSpacing = (this._height-this._offsetY) / this._points;
+		var currentPoints = this._points;
 		for (var y=0;y<=this._points;y++) {
 			var thisY = y*verticalSpacing;
 			this._drawLine(this._offsetX, thisY, this._width, thisY, '#c0c0c0', 1);
-			this._writeText('punt '+y, 0, thisY, "10px Arial", "#c0Ac0c0");
+			this._writeText(currentPoints, 32, thisY+9, "12px Arial", "#202020");
+			currentPoints--;
 		}
 		this._drawLine(this._offsetX, 0, this._width, this._height-this._offsetY, '#c0c0E2', 1);
 		console.log("-- draw done --");
