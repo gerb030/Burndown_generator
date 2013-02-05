@@ -21,7 +21,7 @@
 				Enter the start date : <input name='startdate' id='startdate' type='text' onchange='BurnDown.handleDateChange("start");'>
 			</p>
 			<p>
-				Enter the start date : <input name='enddate' id='enddate' type='text' onchange='BurnDown.handleDateChange("end");'>
+				Enter the end date : <input name='enddate' id='enddate' type='text' onchange='BurnDown.handleDateChange("end");'>
 			</p>
 			<p>
 				or select the sprint duration : <select name='duration' id='duration' onchange='BurnDown.handleDateChange("duration");'>
@@ -34,6 +34,9 @@
 												<option value='10'>10 weeks</option>
 												<option value='12'>12 weeks</option>
 											</select>
+			</p>
+			<p>
+				Always skip these week days : <input name='skip_saturday' id='skip_saturday' type='checkbox' checked> Saturdays <input name='skip_sunday' id='skip_sunday' type='checkbox' checked> Sundays
 			</p>
 			<p>
 				Enter the total story points : <input name='storypoints' id='storypoints' type='text' value='10' onchange='BurnDown.handleDateChange("storypoints");'>

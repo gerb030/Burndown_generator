@@ -46,6 +46,12 @@ var BurnDown = {
 			BurnDownGraph.setStartDate(startDate);
 			BurnDownGraph.setEndDate(endDate);
 			BurnDownGraph.setPoints(storyPoints);
+			if ($('#skip_saturday').is(':checked')) {
+				BurnDownGraph.addSkipWeekDay(6);
+			}
+			if ($('#skip_sunday').is(':checked')) {
+				BurnDownGraph.addSkipWeekDay(0);
+			}
 			BurnDownGraph.draw();
 		}
 	},
@@ -94,6 +100,7 @@ var BurnDownGraph = {
 		this._canvas.height = this._height;
 		this._target.appendChild(this._canvas);
 		this._ctx = this._canvas.getContext("2d");
+		this._skipWeekDays = [];
 	},
 	setStartDate : function(startDate) {
 		this._startDate = startDate;
@@ -104,8 +111,73 @@ var BurnDownGraph = {
 	setPoints : function(points) {
 		this._points = points;
 	},
+	addSkipWeekDay : function(weekday) {
+		this._skipWeekDays.push(weekday);
+	},
+	_getDayLabel : function(dayInt) {
+		switch(dayInt) {
+			case 0:
+				return 'Sun';
+			case 1:
+				return 'Mon';
+			case 2:
+				return 'Tue';
+			case 3:
+				return 'Wed';
+			case 4:
+				return 'Thu';
+			case 5:
+				return 'Fri';
+			case 6:
+			default:
+				return 'Sat';
+		}
+	},
+	_getMonthLabel : function(monthInt) {
+		switch(monthInt) {
+			case 0:
+				return 'Jan';
+			case 1:
+				return 'Feb';
+			case 2:
+				return 'Mar';
+			case 3:
+				return 'Apr';
+			case 4:
+				return 'May';
+			case 5:
+				return 'Jun';
+			case 6:
+				return 'Jul';
+			case 7:
+				return 'Aug';
+			case 8:
+				return 'Sep';
+			case 9:
+				return 'Oct';
+			case 10:
+				return 'Nov';
+			case 11:
+			default:
+				return 'Dec';
+		}
+	},
 	draw : function() {
+		var totalDays = [];
 		var diffDays = Math.round((this._endDate - this._startDate)/(3600*1000*24));
+		for (var d=0;d<diffDays;d++) {
+			var thisDay = new Date();
+			thisDay.setDate(this._endDate.getDate() - d);
+			console.log(thisDay);
+			for(var p in this._skipWeekDays) {
+				if (thisDay.getDay() == this._skipWeekDays[p]) {
+					console.log('NOT IN LIST');
+					diffDays--;
+				} else {
+					totalDays.push(thisDay);	
+				}
+			}
+		}
 		var horizontalSpacing = (this._width-this._offsetX) / diffDays;
 		// x axis, days duration
 		var thisDate = new Date();
@@ -113,8 +185,9 @@ var BurnDownGraph = {
 			var thisX = x*horizontalSpacing+this._offsetX;
 			this._drawLine(thisX, 0, thisX, this._height-this._offsetY, '#c0c0c0', 1);
 			// date
-			thisDate.setDate(this._startDate.getDate()-y);
-			this._writeText("tekst", this._offsetX, thisY, "10px Arial", "#c0c0c0");
+			var labelDate = totalDays.pop();
+			var label = this._getDayLabel(labelDate.getDay())+' '+labelDate.getDate()+' '+this._getMonthLabel(labelDate.getMonth());
+			this._writeText(label, thisX, this._height-this._offsetY+14, "12px Arial", "#202020");
 		}
 		// Y axis, days number of points
 		var verticalSpacing = (this._height-this._offsetY) / this._points;
