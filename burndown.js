@@ -164,28 +164,35 @@ var BurnDownGraph = {
 	},
 	draw : function() {
 		var totalDays = [];
-		var diffDays = Math.round((this._endDate - this._startDate)/(3600*1000*24));
+		var diffDays = Math.round((this._endDate - this._startDate)/(3600*1000*24))+1;
+		var displayDiffDays = diffDays;
+		var nextDay = 0;
 		for (var d=0;d<diffDays;d++) {
 			var thisDay = new Date();
-			thisDay.setDate(this._endDate.getDate() - d);
-			console.log(thisDay);
+			thisDay.setDate(this._startDate.getDate() + nextDay);
+			var addDay = true;
 			for(var p in this._skipWeekDays) {
 				if (thisDay.getDay() == this._skipWeekDays[p]) {
-					console.log('NOT IN LIST');
-					diffDays--;
-				} else {
-					totalDays.push(thisDay);	
-				}
+					addDay = false;
+				} 
 			}
+			if (addDay) {
+				totalDays.push(thisDay);
+			} else { 
+				displayDiffDays--;
+			}
+			nextDay++;
 		}
-		var horizontalSpacing = (this._width-this._offsetX) / diffDays;
+		console.log('days to count down : '+displayDiffDays);
+		console.log('total days labelled : '+totalDays.length);
+		var horizontalSpacing = (this._width-this._offsetX) / displayDiffDays;
 		// x axis, days duration
 		var thisDate = new Date();
-		for (var x=0;x<=diffDays;x++) {
+		for (var x=0;x<displayDiffDays;x++) {
 			var thisX = x*horizontalSpacing+this._offsetX;
 			this._drawLine(thisX, 0, thisX, this._height-this._offsetY, '#c0c0c0', 1);
 			// date
-			var labelDate = totalDays.pop();
+			var labelDate = totalDays.shift();
 			var label = this._getDayLabel(labelDate.getDay())+' '+labelDate.getDate()+' '+this._getMonthLabel(labelDate.getMonth());
 			this._writeText(label, thisX, this._height-this._offsetY+14, "12px Arial", "#202020");
 		}
