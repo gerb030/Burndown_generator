@@ -1,10 +1,10 @@
 <html>
 	<head>
-		<title>[ b u r n d o w n   g e n e r a t o r ]</title>
+		<title>[ b u r n d o w n   c h a r t s ]</title>
 		<script language="javascript" src="jquery.min.js"></script>
 		<script language="javascript" src="burndown.js"></script>
-    	<link rel="stylesheet" type="text/css" href="screen.css" />
-
+    	<link rel="stylesheet" type="text/css" href="screen.css" media="screen" />
+    	<link rel="stylesheet" type="text/css" href="print.css" media="print" />
 	    <script type="text/javascript">
 	    $(document).ready(function(){
 	    	  BurnDown.init();
@@ -14,8 +14,8 @@
 
 </head>
 <body>
-	<h1>burndown generator</h1>
-	<div id='console'>
+	<div id='guiconsole'>
+		<h1>burndown generator</h1>
 		<form>
 			<p>
 				Enter the start date : <input name='startdate' id='startdate' type='text' onchange='BurnDown.handleDateChange("start");'>
@@ -46,6 +46,7 @@
 			</p>
 		</form>
 	</div>
+	<div id='burndowntitle'><h2>burndown chart</h2></div>
 	<div id='burndowngraph'></div>
 	</body>
 </html>		

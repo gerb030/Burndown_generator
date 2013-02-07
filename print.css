@@ -2,10 +2,15 @@ body {
 	font: 10pt arial;
 }
 #guiconsole {
-	display:block;
+	display:none;
 }
 #burndowntitle {
-	display:none;
+	display:block;
+}
+
+.graph {
+	margin-left: 36px;
+	border: 0px solid black;
 }
 .legendY, .legendX {
 	font: 8pt arial;

@@ -196,6 +196,8 @@ var BurnDownGraph = {
 			var label = this._getDayLabel(labelDate.getDay())+' '+labelDate.getDate()+' '+this._getMonthLabel(labelDate.getMonth());
 			this._writeText(label, thisX, this._height-this._offsetY+14, "12px Arial", "#202020");
 		}
+	 	var thisX = x*horizontalSpacing+this._offsetX;
+		this._drawLine(thisX, 0, thisX, this._height-this._offsetY, '#c0c0c0', 1);
 		// Y axis, days number of points
 		var verticalSpacing = (this._height-this._offsetY) / this._points;
 		var currentPoints = this._points;
