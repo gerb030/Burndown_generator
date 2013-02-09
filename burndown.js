@@ -89,15 +89,19 @@ var BurnDownGraph = {
 	init : function(target) {
 		this._offsetX = 48;
 		this._offsetY = 32;
+		this._offsetXrightMargin = 48;
+		this._offsetYtopMargin = 10;
 		this._target = target;
 		this._target.innerHTML = "";
 		this._canvas = document.createElement("canvas")
 		this._canvas.id = 'graph';
-		this._width = 1024;//screen.availWidth; 
+		this._width = 1280;//screen.availWidth; 
 		this._height = 640;//screen.availHeight; 
 		this._canvas.className = 'canvasStyle';
 		this._canvas.width = this._width;
 		this._canvas.height = this._height;
+		this._graphWidth = this._width-this._offsetXrightMargin;
+		this._graphHeight = this._height-this._offsetYtopMargin;
 		this._target.appendChild(this._canvas);
 		this._ctx = this._canvas.getContext("2d");
 		this._skipWeekDays = [];
@@ -162,9 +166,22 @@ var BurnDownGraph = {
 				return 'Dec';
 		}
 	},
+	_getYIncremental : function() {
+		switch(true) {
+			case this._points >= 500:
+				return 100;
+			case this._points >= 100:
+				return 50;
+			case this._points >= 50:
+				return 10;
+			default:
+				return 1;
+		}
+	},
 	draw : function() {
 		var totalDays = [];
 		var diffDays = Math.round((this._endDate - this._startDate)/(3600*1000*24))+1;
+		var yIncrement = this._getYIncremental(diffDays);
 		var displayDiffDays = diffDays;
 		var nextDay = 0;
 		for (var d=0;d<diffDays;d++) {
@@ -183,31 +200,38 @@ var BurnDownGraph = {
 			}
 			nextDay++;
 		}
-		console.log('days to count down : '+displayDiffDays);
-		console.log('total days labelled : '+totalDays.length);
-		var horizontalSpacing = (this._width-this._offsetX) / displayDiffDays;
+		var horizontalSpacing = (this._graphWidth-this._offsetX) / displayDiffDays;
 		// x axis, days duration
 		var thisDate = new Date();
 		for (var x=0;x<displayDiffDays;x++) {
 			var thisX = x*horizontalSpacing+this._offsetX;
-			this._drawLine(thisX, 0, thisX, this._height-this._offsetY, '#c0c0c0', 1);
+			this._drawLine(thisX, this._offsetYtopMargin, thisX, this._graphHeight, '#c0c0c0', 1);
 			// date
 			var labelDate = totalDays.shift();
 			var label = this._getDayLabel(labelDate.getDay())+' '+labelDate.getDate()+' '+this._getMonthLabel(labelDate.getMonth());
-			this._writeText(label, thisX, this._height-this._offsetY+14, "12px Arial", "#202020");
+			this._writeText(label, thisX+horizontalSpacing-32, this._graphHeight, "12px Arial", "#202020");
 		}
 	 	var thisX = x*horizontalSpacing+this._offsetX;
-		this._drawLine(thisX, 0, thisX, this._height-this._offsetY, '#c0c0c0', 1);
+		this._drawLine(thisX, this._offsetYtopMargin, thisX, this._graphHeight, '#c0c0c0', 1);
+		
 		// Y axis, days number of points
-		var verticalSpacing = (this._height-this._offsetY) / this._points;
+		var verticalSpacing = (this._height-this._offsetY-this._offsetYtopMargin) / this._points;
 		var currentPoints = this._points;
-		for (var y=0;y<=this._points;y++) {
-			var thisY = y*verticalSpacing;
-			this._drawLine(this._offsetX, thisY, this._width, thisY, '#c0c0c0', 1);
-			this._writeText(currentPoints, 32, thisY+9, "12px Arial", "#202020");
-			currentPoints--;
+		var remainder = currentPoints % yIncrement;
+		if (remainder != 0) {
+			this._drawLine(this._offsetX, this._offsetYtopMargin, this._graphWidth, thisY, '#c0c0c0', 2);
+			this._writeText(currentPoints, 25, thisY+9, "12px Arial", "#202020");
+			currentPoints = currentPoints - remainder;
 		}
-		this._drawLine(this._offsetX, 0, this._width, this._height-this._offsetY, '#c0c0E2', 1);
+		var currentPointsLabel = currentPoints;
+		for (var y=0;y<=this._points;y=y+yIncrement) {
+			var thisY = this._offsetYtopMargin+y*verticalSpacing;
+			this._writeText(currentPointsLabel, 25, thisY+this._offsetYtopMargin+6, "12px Arial", "#202020");
+			this._drawLine(this._offsetX, Math.floor(thisY+this._offsetYtopMargin), this._graphWidth, Math.floor(thisY+this._offsetYtopMargin), '#c0c0c0', 1);
+			currentPointsLabel = currentPointsLabel - yIncrement;
+		}
+		// diagonal!
+		this._drawLine(this._offsetX, this._offsetYtopMargin, this._graphWidth, this._graphHeight, '#c0c0E2', 2);
 		console.log("-- draw done --");
 	},
 	_drawLine : function (xFrom, yFrom, xTo, yTo, colour, width) {
@@ -216,6 +240,7 @@ var BurnDownGraph = {
 		this._ctx.beginPath();
 		this._ctx.moveTo(xFrom, yFrom);
 		this._ctx.lineTo(xTo, yTo);
+		this._ctx.closePath();
 		this._ctx.stroke();
 	},
 	_writeText : function(text, x, y, fontDescription, colour) {
