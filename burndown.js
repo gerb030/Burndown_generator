@@ -184,6 +184,7 @@ var BurnDownGraph = {
 		var yIncrement = this._getYIncremental(diffDays);
 		var displayDiffDays = diffDays;
 		var nextDay = 0;
+		// let's strip out the weekend days
 		for (var d=0;d<diffDays;d++) {
 			var thisDay = new Date();
 			thisDay.setDate(this._startDate.getDate() + nextDay);
@@ -205,33 +206,37 @@ var BurnDownGraph = {
 		var thisDate = new Date();
 		for (var x=0;x<displayDiffDays;x++) {
 			var thisX = x*horizontalSpacing+this._offsetX;
-			this._drawLine(thisX, this._offsetYtopMargin, thisX, this._graphHeight, '#c0c0c0', 1);
+			this._drawLine(thisX, this._offsetYtopMargin, thisX, this._graphHeight-22, '#c0c0c0', 1);
 			// date
 			var labelDate = totalDays.shift();
 			var label = this._getDayLabel(labelDate.getDay())+' '+labelDate.getDate()+' '+this._getMonthLabel(labelDate.getMonth());
 			this._writeText(label, thisX+horizontalSpacing-32, this._graphHeight, "12px Arial", "#202020");
 		}
 	 	var thisX = x*horizontalSpacing+this._offsetX;
-		this._drawLine(thisX, this._offsetYtopMargin, thisX, this._graphHeight, '#c0c0c0', 1);
-		
-		// Y axis, days number of points
-		var verticalSpacing = (this._height-this._offsetY-this._offsetYtopMargin) / this._points;
+		this._drawLine(thisX, this._offsetYtopMargin, thisX, this._graphHeight-22, '#c0c0c0', 1);
+
+		// Y axis, number of points
 		var currentPoints = this._points;
 		var remainder = currentPoints % yIncrement;
+		totalDisplayPoints = currentPoints - remainder + yIncrement;
+		// determine divider spaces
+		var verticalSpacing = (this._height-this._offsetY-this._offsetYtopMargin) / totalDisplayPoints;
+		var yStartPoint = this._offsetYtopMargin+(verticalSpacing*(yIncrement-remainder));
 		if (remainder != 0) {
-			this._drawLine(this._offsetX, this._offsetYtopMargin, this._graphWidth, thisY, '#c0c0c0', 2);
-			this._writeText(currentPoints, 25, thisY+9, "12px Arial", "#202020");
+			this._writeText(currentPoints, 10, yStartPoint, "12px Arial", "#000000	");
 			currentPoints = currentPoints - remainder;
 		}
-		var currentPointsLabel = currentPoints;
-		for (var y=0;y<=this._points;y=y+yIncrement) {
+		var currentPointsLabel = totalDisplayPoints;
+		for (var y=0;y<=this._points+yIncrement;y=y+yIncrement) {
 			var thisY = this._offsetYtopMargin+y*verticalSpacing;
-			this._writeText(currentPointsLabel, 25, thisY+this._offsetYtopMargin+6, "12px Arial", "#202020");
-			this._drawLine(this._offsetX, Math.floor(thisY+this._offsetYtopMargin), this._graphWidth, Math.floor(thisY+this._offsetYtopMargin), '#c0c0c0', 1);
+			this._writeText(currentPointsLabel, 25, thisY+5, "12px Arial", "#202020");
+			this._drawLine(this._offsetX, thisY, this._graphWidth, thisY, '#c0c0c0', 1);
 			currentPointsLabel = currentPointsLabel - yIncrement;
 		}
 		// diagonal!
-		this._drawLine(this._offsetX, this._offsetYtopMargin, this._graphWidth, this._graphHeight, '#c0c0E2', 2);
+		this._drawLine(this._offsetX, yStartPoint, this._graphWidth, thisY, '#c0c0E2', 2);
+		// console.log(verticalSpacing+'*(('+yIncrement+'-'+remainder+')/'+yIncrement+')');
+		// console.log(verticalSpacing+'*'+((yIncrement-remainder)/yIncrement));
 		console.log("-- draw done --");
 	},
 	_drawLine : function (xFrom, yFrom, xTo, yTo, colour, width) {
