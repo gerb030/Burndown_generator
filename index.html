@@ -28,18 +28,13 @@
 												<option value='1'>1 week</option>
 												<option value='2'>2 weeks</option>
 												<option value='3'>3 weeks</option>
-												<option value='4'>4 weeks</option>
-												<option value='6'>6 weeks</option>
-												<option value='8'>8 weeks</option>
-												<option value='10'>10 weeks</option>
-												<option value='12'>12 weeks</option>
 											</select>
 			</p>
 			<p>
 				Always skip these week days : <input name='skip_saturday' id='skip_saturday' type='checkbox' checked> Saturdays <input name='skip_sunday' id='skip_sunday' type='checkbox' checked> Sundays
 			</p>
 			<p>
-				Enter the total story points : <input name='storypoints' id='storypoints' type='text' value='71' onchange='BurnDown.handleDateChange("storypoints");'>
+				Enter the total story points : <input name='storypoints' id='storypoints' type='text' value='10' onchange='BurnDown.handleDateChange("storypoints");'>
 			</p>
 			<p>
 				<input name='generate' value='generate' type='button' onclick='BurnDown.generate();'>
