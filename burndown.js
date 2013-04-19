@@ -167,16 +167,7 @@ var BurnDownGraph = {
 		}
 	},
 	_getYIncremental : function() {
-		switch(true) {
-			case this._points >= 500:
-				return 100;
-			case this._points >= 100:
-				return 50;
-			case this._points >= 50:
-				return 10;
-			default:
-				return 1;
-		}
+		return Math.ceil(this._points / 50);
 	},
 	draw : function() {
 		var totalDays = [];
