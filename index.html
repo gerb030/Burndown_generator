@@ -1,43 +1,56 @@
 <html>
 	<head>
 		<title>[ b u r n d o w n   c h a r t s ]</title>
-		<script language="javascript" src="jquery.min.js"></script>
+		<link href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" rel="stylesheet"></link>
+		<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+		<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 		<script language="javascript" src="burndown.js"></script>
-    	<link rel="stylesheet" type="text/css" href="screen.css" media="screen" />
-    	<link rel="stylesheet" type="text/css" href="print.css" media="print" />
-	    <script type="text/javascript">
-	    $(document).ready(function(){
-	    	  BurnDown.init();
-    	 });
+	    	<link rel="stylesheet" type="text/css" href="screen.css" media="screen" />
+    		<link rel="stylesheet" type="text/css" href="print.css" media="print" />
+	    <script>
+      		$(function() {
+		   $( "#startdate" ).datepicker({ dateFormat: 'yy-mm-dd' });
+		}),
+		$(function(){
+		   $( "#enddate" ).datepicker({ dateFormat: 'yy-mm-dd' });
+                })
 	    </script>
-  </head>
-
-</head>
+	    <script type="text/javascript">
+	        $(document).ready(function(){
+	    	   BurnDown.init();
+                });
+	    </script>
+       </head>
 <body>
 	<div id='guiconsole'>
-		<h1>burndown generator</h1>
+		<h1>Sprint information</h1>
 		<form>
 			<p>
-				Enter the start date : <input name='startdate' id='startdate' type='text' onchange='BurnDown.handleDateChange("start");'>
+				From : <input name='startdate' id='startdate' type='text' onchange='BurnDown.handleChange("start");'/>
+				to : <input name='enddate' id='enddate' type='text' onchange='BurnDown.handleChange("end");'/>
 			</p>
 			<p>
-				Enter the end date : <input name='enddate' id='enddate' type='text' onchange='BurnDown.handleDateChange("end");'>
-			</p>
-			<p>
-				or select the sprint duration : <select name='duration' id='duration' onchange='BurnDown.handleDateChange("duration");'>
+				Sprint duration : <select name='duration' id='duration' onchange='BurnDown.handleChange("duration");'/>
 												<option value='1'>1 week</option>
 												<option value='2'>2 weeks</option>
 												<option value='3'>3 weeks</option>
 											</select>
 			</p>
 			<p>
-				Always skip these week days : <input name='skip_saturday' id='skip_saturday' type='checkbox' checked> Saturdays <input name='skip_sunday' id='skip_sunday' type='checkbox' checked> Sundays
+				Skip week days :  <input name='skip_saturday' id='skip_saturday' type='checkbox' checked/> Saturdays <input name='skip_sunday' id='skip_sunday' type='checkbox' checked/> Sundays
 			</p>
 			<p>
-				Enter the total story points : <input name='storypoints' id='storypoints' type='text' value='10' onchange='BurnDown.handleDateChange("storypoints");'>
+				Story points : <input name='storypoints' id='storypoints' type='text' value='10' onchange='BurnDown.handleChange("storypoints");'/>
 			</p>
 			<p>
-				<input name='generate' value='generate' type='button' onclick='BurnDown.generate();'>
+			<h1>Additional options</h1> <!-- make foldable -->
+			</p>
+			<input name='use_customtarget' id='use_customtarget' type='checkbox'> Use custom target
+			<p>
+				Percantage points done for custom target: <input name='customtarget' id='customtarget' type='text' value='70' onchange='BurnDown.handleChange("customtarget");'/> %
+			</p>			
+			<p>
+				<input name='generate' value='generate' type='button' onclick='BurnDown.generate();'/>
 			</p>
 		</form>
 	</div>
