@@ -224,10 +224,9 @@ var BurnDownGraph = {
 
 	_createDays : function(diffDays){
 		var totalDays = [];
-
 		for (var nextDay=0;nextDay<diffDays;nextDay++) {
-                        var thisDay = new Date();
-                        thisDay.setDate(this._startDate.getDate() + nextDay);
+                        var thisDay = new Date(this._startDate.toString());
+                        thisDay.setDate(thisDay.getDate() + nextDay);
                         var addDay = true;
                         for(var p in this._skipWeekDays) {
                                 if (thisDay.getDay() == this._skipWeekDays[p]) {
